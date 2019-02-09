@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: sql-ace-test-api
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+    default-property-inclusion: non_absent
+
+server:
+  port: 9000
