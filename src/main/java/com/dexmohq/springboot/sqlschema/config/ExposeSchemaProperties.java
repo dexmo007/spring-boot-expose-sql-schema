@@ -18,4 +18,6 @@ public class ExposeSchemaProperties {
 
     private Set<String> exclude = Collections.emptySet();
 
+    private boolean introspect = false;
+
 }

@@ -51,6 +51,9 @@ public class DataSourceConfig {
                 .dataSource(firstDataSource())
                 .packages(ScanEvent.class)
                 .persistenceUnit("first")
+                .properties(Map.of(
+                        "hibernate.hbm2ddl.auto", "create-drop"
+                ))
                 .build();
     }
 

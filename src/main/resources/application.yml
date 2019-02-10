@@ -19,5 +19,6 @@ server:
 schema:
   expose:
     base-path: "/internal/schema"
+    introspect: false
 #    exclude:
 #      - com.dexmohq.springboot.sqlschema.first.ScanEvent
