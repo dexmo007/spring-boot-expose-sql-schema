@@ -1,62 +1,33 @@
 package com.dexmohq.springboot.sqlschema;
 
+import lombok.Data;
 import lombok.Getter;
-import lombok.Value;
+import lombok.extern.apachecommons.CommonsLog;
 import org.hibernate.boot.Metadata;
-import org.hibernate.boot.model.relational.Database;
-import org.hibernate.boot.model.relational.Namespace;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.integrator.spi.Integrator;
-import org.hibernate.mapping.Column;
-import org.hibernate.mapping.Table;
 import org.hibernate.service.spi.SessionFactoryServiceRegistry;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.HashMap;
+import java.util.Map;
 
+@CommonsLog
+@Data
 public class DatabaseMetadataIntegrator implements Integrator {
 
-    @Getter
-    private static final Map<String, List<String>> metadataMap = new HashMap<>();
+    public static final DatabaseMetadataIntegrator INSTANCE = new DatabaseMetadataIntegrator();
 
     @Getter
-    private static Schema schema;
-
-    @Getter
-    private static Database database;
+    private static Map<String, Metadata> metadataMap = new HashMap<>();
 
     @Override
     public void integrate(Metadata metadata, SessionFactoryImplementor sessionFactoryImplementor, SessionFactoryServiceRegistry sessionFactoryServiceRegistry) {
-        final Database db = metadata.getDatabase();
-        database = db;
-
-        final String dialect = db.getDialect().getClass().getSimpleName().replaceFirst("Dialect$", "");
-        final List<Namespace> namespaces = StreamSupport.stream(db.getNamespaces().spliterator(), false)
-                .collect(Collectors.toList());
-
-        schema = new Schema(dialect, namespaces);
-
-        for (final Namespace namespace : metadata.getDatabase().getNamespaces()) {
-            for (final Table table : namespace.getTables()) {
-                @SuppressWarnings("unchecked") final List<String> columns = StreamSupport.stream(
-                        Spliterators.spliteratorUnknownSize((Iterator<Column>) table.getColumnIterator(), Spliterator.ORDERED), false)
-                        .map(Column::getName)
-                        .collect(Collectors.toList());
-                metadataMap.put(table.getName(), columns);
-            }
-        }
+        metadataMap.put(((String) sessionFactoryImplementor.getProperties().get("hibernate.ejb.persistenceUnitName")), metadata);
     }
 
     @Override
     public void disintegrate(SessionFactoryImplementor sessionFactoryImplementor, SessionFactoryServiceRegistry sessionFactoryServiceRegistry) {
         // nothing to disintegrate
-    }
-
-    @Value
-    public static class Schema {
-        String dialect;
-        List<Namespace> namespaces;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.dexmohq.springboot.sqlschema;
+package com.dexmohq.springboot.sqlschema.first;
 
 import lombok.Data;
 

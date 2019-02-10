@@ -5,6 +5,19 @@ spring:
     serialization:
       FAIL_ON_EMPTY_BEANS: false
     default-property-inclusion: non_absent
+  first-datasource:
+    url: "jdbc:h2:mem:events;DB_CLOSE_DELAY=-1"
+  second-datasource:
+    url: "jdbc:mysql://localhost:3306/tasks"
+    username: "root"
+
+#    url: "jdbc:h2:mem:tasks;DB_CLOSE_DELAY=-1"
 
 server:
   port: 9000
+
+schema:
+  expose:
+    base-path: "/internal/schema"
+#    exclude:
+#      - com.dexmohq.springboot.sqlschema.first.ScanEvent

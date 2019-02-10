@@ -85,7 +85,8 @@ public class JacksonConfig {
 
         @Override
         public String convert(Column value) {
-            return value.getQuotedName(DatabaseMetadataIntegrator.getDatabase().getDialect());
+            // DatabaseMetadataIntegrator.INSTANCE.getMetadata().getDatabase().getDialect()
+            return value.getQuotedName();
         }
     }
 

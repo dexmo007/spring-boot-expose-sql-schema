@@ -1,5 +1,6 @@
-package com.dexmohq.springboot.sqlschema;
+package com.dexmohq.springboot.sqlschema.first;
 
+import com.dexmohq.springboot.sqlschema.config.NoExposure;
 import lombok.Data;
 import org.hibernate.annotations.Check;
 
@@ -10,6 +11,7 @@ import java.util.Date;
 @Entity
 @Table(name = "`SCAN EVENT`", indexes = @Index(columnList = "BARCODE"), uniqueConstraints = @UniqueConstraint(columnNames = {"BARCODE_TYPE_ID", "BARCODE"}))
 @Check(constraints = "LENGTH(TRIM(BARCODE)) = LENGTH(BARCODE)")
+//@NoExposure
 public class ScanEvent {
 
     @Id
@@ -22,5 +24,8 @@ public class ScanEvent {
 
     @Column(name = "BARCODE")
     private String barcode;
+
+    @NoExposure
+    private String userId;
 
 }
