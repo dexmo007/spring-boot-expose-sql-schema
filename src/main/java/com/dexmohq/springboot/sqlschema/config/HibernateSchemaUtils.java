@@ -52,13 +52,13 @@ public class HibernateSchemaUtils {
                         .map(HibernateSchemaUtils::columnDefFor)
                         .collect(Collectors.toSet()),
                 new PrimaryKeyDef(table.getPrimaryKey().getName(), table.getPrimaryKey().getColumns().stream().map(Column::getQuotedName).collect(toList())),
-                stream(table.getCheckConstraintsIterator()).collect(Collectors.toSet()),
+                stream(table.getCheckConstraintsIterator()).map(expr -> new CheckConstraintDef(null, expr)).collect(Collectors.toSet()),
                 table.getForeignKeys().values().stream().map(HibernateSchemaUtils::foreignKeyDefFor).collect(Collectors.toSet()),
                 Stream.concat(
                         stream(table.getUniqueKeyIterator()).map(uk -> new IndexDef(uk.getName(),
                                 uk.getColumns().stream().map(Column::getQuotedName).collect(toList()), true, null)),
                         stream(table.getIndexIterator())
-                                .map(index -> new IndexDef(index.getName(), stream(index.getColumnIterator()).map(Column::getQuotedName).collect(toList()), false,null)))
+                                .map(index -> new IndexDef(index.getName(), stream(index.getColumnIterator()).map(Column::getQuotedName).collect(toList()), false, null)))
                         .collect(Collectors.toSet())
         );
     }

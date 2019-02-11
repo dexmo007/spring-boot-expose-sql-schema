@@ -39,8 +39,8 @@ public class ExposeSchemaAutoConfiguration implements InitializingBean {
 
     @Bean
     @ConditionalOnMissingBean
-    public JdbcSchemaIntrospector jdbcSchemaIntrospector(List<EntityManager> entityManagers) {
-        return new JdbcSchemaIntrospector(entityManagers);
+    public JdbcSchemaIntrospectionService jdbcSchemaIntrospector(List<EntityManager> entityManagers) {
+        return new JdbcSchemaIntrospectionService(entityManagers);
     }
 
     @Bean
@@ -50,25 +50,25 @@ public class ExposeSchemaAutoConfiguration implements InitializingBean {
         return new SchemaController(schemas);
     }
 
-    private Schema buildSchema(String persistenceUnit, Metadata metadata, JdbcSchemaIntrospector jdbcSchemaIntrospector) {
+    private Schema buildSchema(String persistenceUnit, Metadata metadata, JdbcSchemaIntrospectionService jdbcSchemaIntrospectionService) {
         if (properties.isIntrospect()) {
-            return jdbcSchemaIntrospector.introspect(persistenceUnit);
+            return jdbcSchemaIntrospectionService.introspect(persistenceUnit);
         }
         return HibernateSchemaUtils.fromMetadata(metadata, properties);
     }
 
     @Bean
-    Schemas schemas(JdbcSchemaIntrospector jdbcSchemaIntrospector) {
+    Schemas schemas(JdbcSchemaIntrospectionService jdbcSchemaIntrospectionService) {
         final Map<String, Schema> exposed = DatabaseMetadataIntegrator.getMetadataMap().entrySet().stream()
                 .filter(e -> properties.getPersistenceUnits().isEmpty() || properties.getPersistenceUnits().contains(e.getKey()))
-                .map(e -> Map.entry(e.getKey(), buildSchema(e.getKey(), e.getValue(), jdbcSchemaIntrospector)))
+                .map(e -> Map.entry(e.getKey(), buildSchema(e.getKey(), e.getValue(), jdbcSchemaIntrospectionService)))
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
         return new Schemas(exposed);
     }
 
     @Override
     public void afterPropertiesSet() {
-        final ExposeSchemaConfigurer.ExposeSchemaConfig config = new ExposeSchemaConfigurer.ExposeSchemaConfig(properties);
+        final ExposeSchemaPropertiesBuilder config = new ExposeSchemaPropertiesBuilder(properties);
         for (final ExposeSchemaConfigurer exposeSchemaConfigurer : exposeSchemaConfigurers) {
             exposeSchemaConfigurer.configure(config);
         }

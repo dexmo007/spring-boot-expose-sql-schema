@@ -13,7 +13,7 @@ public class TableDef {
 
     PrimaryKeyDef primaryKey;
 
-    Set<String> checkConstraints;
+    Set<CheckConstraintDef> checkConstraints;
 
     Set<ForeignKeyDef> foreignKeys;
 
