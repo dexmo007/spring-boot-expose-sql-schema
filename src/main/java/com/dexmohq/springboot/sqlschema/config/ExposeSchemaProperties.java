@@ -3,7 +3,7 @@ package com.dexmohq.springboot.sqlschema.config;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -12,11 +12,11 @@ public class ExposeSchemaProperties {
 
     private String basePath = "/schema";
 
-    private Set<String> persistenceUnits = Collections.emptySet();
+    private Set<String> persistenceUnits = new HashSet<>();
 
-    private Set<String> include = Collections.emptySet();
+    private Set<String> include = new HashSet<>();
 
-    private Set<String> exclude = Collections.emptySet();
+    private Set<String> exclude = new HashSet<>();
 
     private boolean introspect = false;
 

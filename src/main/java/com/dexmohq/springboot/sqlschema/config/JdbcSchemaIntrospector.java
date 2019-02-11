@@ -2,6 +2,7 @@ package com.dexmohq.springboot.sqlschema.config;
 
 import com.dexmohq.springboot.sqlschema.DatabaseMetadataIntegrator;
 import com.dexmohq.springboot.sqlschema.model.Schema;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +13,11 @@ import javax.persistence.EntityManager;
 import java.sql.DatabaseMetaData;
 import java.util.List;
 
-@Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class JdbcSchemaIntrospector {
 
     private final List<EntityManager> entityManagers;
-
-    @Autowired
-    public JdbcSchemaIntrospector(List<EntityManager> entityManagers) {
-        this.entityManagers = entityManagers;
-    }
 
     public Schema introspect(String persistenceUnit) {
         final EntityManager entityManager = entityManagers.stream()

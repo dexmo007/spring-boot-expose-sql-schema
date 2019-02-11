@@ -1,4 +1,4 @@
-package com.dexmohq.springboot.sqlschema;
+package com.dexmohq.springboot.sqlschema.controller;
 
 import com.dexmohq.springboot.sqlschema.model.Schema;
 import com.dexmohq.springboot.sqlschema.model.Schemas;
@@ -9,12 +9,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
+
 @RestController
 @CommonsLog
 @RequiredArgsConstructor
 public class SchemaController {
 
     private final Schemas schemas;
+
+    @PostConstruct
+    public void init() {
+        log.info("Exposing schemas at /...");
+    }
 
     @GetMapping("${schema.expose.base-path:/schema}/{unit}")
     public ResponseEntity<Schema> getReportingSchemaFull(@PathVariable("unit") String unit) {
